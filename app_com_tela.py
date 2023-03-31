@@ -20,88 +20,34 @@ MARGIN = 1
 
 
 
-class GridEvolution:
-    def __init__(self, grid):
-        self.width = len(grid[0])
-        self.height = len(grid)
-        self.gridArray = []
-        self.gridIndex = -1
-        self.totalEvolution = 0
-        
-        self.gridArray.append(grid)
-        
-
-    def nextEvolution(self):
-        lastIndex = len(self.gridArray) - 1
-        newMap = []
-        for r in range(self.height):
-            newRow = []
-            for c in range(self.width):
-                value = self.cellEvolution(r, c, lastIndex)
-                if r == 0 and c == 0:
-                    value = 0
-                if r == self.height - 1 and c == self.width - 1:
-                    value = 0
-                newRow.append(value)
-            newMap.append(newRow)
-        self.gridArray.append(newMap)
-        self.gridIndex = len(self.gridArray) - 1
-        self.totalEvolution += 1
-        
-        return newMap
-
-    def cellEvolution(self, row, col, lastIndex):
-        count = 0
-        selfCell = self.gridArray[lastIndex][row][col]
-        rMax = row - 1 if row > 0 else 0
-        rMin = row + 1 if row < self.height - 1 else self.height - 1
-        cMax = col - 1 if col > 0 else 0
-        cMin = col + 1 if col < self.width - 1 else self.width - 1
-        for r in range(rMax, rMin + 1):
-            for c in range(cMax, cMin + 1):
-                if r == row and c == col:
-                    continue
-                if self.gridArray[lastIndex][r][c] == 1:
-                    count += 1
-        if selfCell == 1:
-            return 1 if count > 3 and count < 6 else 0
-        else:
-            return 1 if count > 1 and count < 5 else 0
-
-    def getGrid(self, index=None):
-        if index is None:
-            index = self.gridIndex
-        return self.gridArray[index]
 
 
 def atualizar_matriz(matrix):
-    # nova_matrix = [[0 for j in range(len(matrix[0]))] for i in range(len(matrix))]
-    # for i in range(len(matrix)):
-    #     for j in range(len(matrix[0])):
-    #         if (i, j) == (0, 0) or (i, j) == (len(matrix)-1, len(matrix[0])-1):
-    #             # As células (0,0) e (64,84) não são alteradas
-    #             nova_matrix[i][j] = matrix[i][j]
-    #         elif matrix[i][j] == 1:
-    #             num_verdes = 0
-    #             for r in range(max(0, i-1), min(len(matrix), i+2)):
-    #                 for c in range(max(0, j-1), min(len(matrix[0]), j+2)):
-    #                     if matrix[r][c] == 1 and (r != i or c != j):
-    #                         num_verdes += 1
-    #             if num_verdes > 3 and num_verdes < 6:
-    #                 nova_matrix[i][j] = 1
-    #         else:
-    #             num_verdes = 0
-    #             for r in range(max(0, i-1), min(len(matrix), i+2)):
-    #                 for c in range(max(0, j-1), min(len(matrix[0]), j+2)):
-    #                     if matrix[r][c] == 1:
-    #                         num_verdes += 1
-    #             if num_verdes > 1 and num_verdes < 5:
-    #                 nova_matrix[i][j] = 1
-    
-    grid = GridEvolution(matrix)
+    nova_matrix = [[0 for j in range(len(matrix[0]))] for i in range(len(matrix))]
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            if (i, j) == (0, 0) or (i, j) == (len(matrix)-1, len(matrix[0])-1):
+                # As células (0,0) e (64,84) não são alteradas
+                nova_matrix[i][j] = matrix[i][j]
+            elif matrix[i][j] == 1:
+                num_verdes = 0
+                for r in range(max(0, i-1), min(len(matrix), i+2)):
+                    for c in range(max(0, j-1), min(len(matrix[0]), j+2)):
+                        if matrix[r][c] == 1 and (r != i or c != j):
+                            num_verdes += 1
+                if num_verdes > 3 and num_verdes < 6:
+                    nova_matrix[i][j] = 1
+            else:
+                num_verdes = 0
+                for r in range(max(0, i-1), min(len(matrix), i+2)):
+                    for c in range(max(0, j-1), min(len(matrix[0]), j+2)):
+                        if matrix[r][c] == 1:
+                            num_verdes += 1
+                if num_verdes > 1 and num_verdes < 5:
+                    nova_matrix[i][j] = 1
+ 
 
-
-    return grid.nextEvolution()
+    return nova_matrix
 
 
 
@@ -220,20 +166,20 @@ GRID_COLS = len(matrix[0])-1
 GRID_ROWS = len(matrix)-1
 
 
-#estado_inicial = Estado(matrix, (0, 0))
-#melhor_rota = encontrar_melhor_rota(estado_inicial)
+estado_inicial = Estado(matrix, (0, 0))
+melhor_rota = encontrar_melhor_rota(estado_inicial)
 
-# print(melhor_rota)
-# d = []
-# for posicao, direcao in melhor_rota:
-#     d.append(direcao)
+print(melhor_rota)
+d = []
+for posicao, direcao in melhor_rota:
+    d.append(direcao)
 
-# print(d)  
-# with open('historico.txt', 'a') as f:
-#     historico = ' '.join(d)
-#     f.write(str(historico))
+print(d)  
+with open('historico.txt', 'a') as f:
+    historico = ' '.join(d)
+    f.write(str(historico))
 
-melhor_rota = [((0, 1), 'R'), ((0, 2), 'R'), ((0, 3), 'D'), ((1, 3), 'R'), ((1, 4), 'R'), ((1, 5), 'D'), ((2, 5), 'D'), ((3, 5), 'R'), ((3, 6), 'R'), ((3, 7), 'R'), ((3, 8), 'R'), ((3, 9), 'R'), ((3, 10), 'D'), ((4, 10), 'D'), ((5, 10), 'D'), ((6, 10), 'R'), ((6, 11), 'R'), ((6, 12), 'R'), ((6, 13), 'D'), ((7, 13), 'R'), ((7, 14), 'R'), ((7, 15), 'R'), ((7, 16), 'R'), ((7, 17), 'R'), ((7, 18), 'R'), ((7, 19), 'D'), ((8, 19), 'D'), ((9, 19), 'D'), ((10, 19), 'R'), ((10, 20), 'R'), ((10, 21), 'R'), ((10, 22), 'R'), ((10, 23), 'R'), ((10, 24), 'R'), ((10, 25), 'R'), ((10, 26), 'R'), ((10, 27), 'R'), ((10, 28), 'D'), ((11, 28), 'D'), ((12, 28), 'R'), ((12, 29), 'R'), ((12, 30), 'R'), ((12, 31), 'R'), ((12, 32), 'R'), ((12, 33), 'R'), ((12, 34), 'R'), ((12, 35), 'R'), ((12, 36), 'R'), ((12, 37), 'R'), ((12, 38), 'R'), ((12, 39), 'R'), ((12, 40), 'R'), ((12, 41), 'R'), ((12, 42), 'R'), ((12, 43), 'R'), ((12, 44), 'R'), ((12, 45), 'R'), ((12, 46), 'R'), ((12, 47), 'R'), ((12, 48), 'R'), ((12, 49), 'R'), ((12, 50), 'R'), ((12, 51), 'R'), ((12, 52), 'R'), ((12, 53), 'R'), ((12, 54), 'R'), ((12, 55), 'R'), ((12, 56), 'R'), ((12, 57), 'R'), ((12, 58), 'R'), ((12, 59), 'R'), ((12, 60), 'R'), ((12, 61), 'R'), ((12, 62), 'D'), ((13, 62), 'R'), ((13, 63), 'R'), ((13, 64), 'R'), ((13, 65), 'R'), ((13, 66), 'R'), ((13, 67), 'R'), ((13, 68), 'R'), ((13, 69), 'R'), ((13, 70), 'R'), ((13, 71), 'R'), ((13, 72), 'R'), ((13, 73), 'R'), ((13, 74), 'R'), ((13, 75), 'D'), ((14, 75), 'R'), ((14, 76), 'R'), ((14, 77), 'R'), ((14, 78), 'D'), ((15, 78), 'D'), ((16, 78), 'D'), ((17, 78), 'D'), ((18, 78), 'D'), ((19, 78), 'D'), ((20, 78), 'D'), ((21, 78), 'D'), ((22, 78), 'D'), ((23, 78), 'D'), ((24, 78), 'R'), ((24, 79), 'D'), ((25, 79), 'R'), ((25, 80), 'D'), ((26, 80), 'D'), ((27, 80), 'D'), ((28, 80), 'R'), ((28, 81), 'D'), ((29, 81), 'R'), ((29, 82), 'R'), ((29, 83), 'R'), ((29, 84), 'D'), ((30, 84), 'D'), ((31, 84), 'D'), ((32, 84), 'D'), ((33, 84), 'D'), ((34, 84), 'D'), ((35, 84), 'D'), ((36, 84), 'D'), ((37, 84), 'D'), ((38, 84), 'D'), ((39, 84), 'D'), ((40, 84), 'D'), ((41, 84), 'D'), ((42, 84), 'D'), ((43, 84), 'D'), ((44, 84), 'D'), ((45, 84), 'D'), ((46, 84), 'D'), ((47, 84), 'D'), ((48, 84), 'D'), ((49, 84), 'D'), ((50, 84), 'D'), ((51, 84), 'D'), ((52, 84), 'D'), ((53, 84), 'D'), ((54, 84), 'D'), ((55, 84), 'D'), ((56, 84), 'D'), ((57, 84), 'D'), ((58, 84), 'D'), ((59, 84), 'D'), ((60, 84), 'D'), ((61, 84), 'D'), ((62, 84), 'D'), ((63, 84), 'D')]
+#melhor_rota = [((0, 1), 'R'), ((0, 2), 'R'), ((0, 3), 'D'), ((1, 3), 'R'), ((1, 4), 'R'), ((1, 5), 'D'), ((2, 5), 'D'), ((3, 5), 'R'), ((3, 6), 'R'), ((3, 7), 'R'), ((3, 8), 'R'), ((3, 9), 'R'), ((3, 10), 'D'), ((4, 10), 'D'), ((5, 10), 'D'), ((6, 10), 'R'), ((6, 11), 'R'), ((6, 12), 'R'), ((6, 13), 'D'), ((7, 13), 'R'), ((7, 14), 'R'), ((7, 15), 'R'), ((7, 16), 'R'), ((7, 17), 'R'), ((7, 18), 'R'), ((7, 19), 'D'), ((8, 19), 'D'), ((9, 19), 'D'), ((10, 19), 'R'), ((10, 20), 'R'), ((10, 21), 'R'), ((10, 22), 'R'), ((10, 23), 'R'), ((10, 24), 'R'), ((10, 25), 'R'), ((10, 26), 'R'), ((10, 27), 'R'), ((10, 28), 'D'), ((11, 28), 'D'), ((12, 28), 'R'), ((12, 29), 'R'), ((12, 30), 'R'), ((12, 31), 'R'), ((12, 32), 'R'), ((12, 33), 'R'), ((12, 34), 'R'), ((12, 35), 'R'), ((12, 36), 'R'), ((12, 37), 'R'), ((12, 38), 'R'), ((12, 39), 'R'), ((12, 40), 'R'), ((12, 41), 'R'), ((12, 42), 'R'), ((12, 43), 'R'), ((12, 44), 'R'), ((12, 45), 'R'), ((12, 46), 'R'), ((12, 47), 'R'), ((12, 48), 'R'), ((12, 49), 'R'), ((12, 50), 'R'), ((12, 51), 'R'), ((12, 52), 'R'), ((12, 53), 'R'), ((12, 54), 'R'), ((12, 55), 'R'), ((12, 56), 'R'), ((12, 57), 'R'), ((12, 58), 'R'), ((12, 59), 'R'), ((12, 60), 'R'), ((12, 61), 'R'), ((12, 62), 'D'), ((13, 62), 'R'), ((13, 63), 'R'), ((13, 64), 'R'), ((13, 65), 'R'), ((13, 66), 'R'), ((13, 67), 'R'), ((13, 68), 'R'), ((13, 69), 'R'), ((13, 70), 'R'), ((13, 71), 'R'), ((13, 72), 'R'), ((13, 73), 'R'), ((13, 74), 'R'), ((13, 75), 'D'), ((14, 75), 'R'), ((14, 76), 'R'), ((14, 77), 'R'), ((14, 78), 'D'), ((15, 78), 'D'), ((16, 78), 'D'), ((17, 78), 'D'), ((18, 78), 'D'), ((19, 78), 'D'), ((20, 78), 'D'), ((21, 78), 'D'), ((22, 78), 'D'), ((23, 78), 'D'), ((24, 78), 'R'), ((24, 79), 'D'), ((25, 79), 'R'), ((25, 80), 'D'), ((26, 80), 'D'), ((27, 80), 'D'), ((28, 80), 'R'), ((28, 81), 'D'), ((29, 81), 'R'), ((29, 82), 'R'), ((29, 83), 'R'), ((29, 84), 'D'), ((30, 84), 'D'), ((31, 84), 'D'), ((32, 84), 'D'), ((33, 84), 'D'), ((34, 84), 'D'), ((35, 84), 'D'), ((36, 84), 'D'), ((37, 84), 'D'), ((38, 84), 'D'), ((39, 84), 'D'), ((40, 84), 'D'), ((41, 84), 'D'), ((42, 84), 'D'), ((43, 84), 'D'), ((44, 84), 'D'), ((45, 84), 'D'), ((46, 84), 'D'), ((47, 84), 'D'), ((48, 84), 'D'), ((49, 84), 'D'), ((50, 84), 'D'), ((51, 84), 'D'), ((52, 84), 'D'), ((53, 84), 'D'), ((54, 84), 'D'), ((55, 84), 'D'), ((56, 84), 'D'), ((57, 84), 'D'), ((58, 84), 'D'), ((59, 84), 'D'), ((60, 84), 'D'), ((61, 84), 'D'), ((62, 84), 'D'), ((63, 84), 'D')]
 
 pygame.init()
 
