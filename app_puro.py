@@ -67,13 +67,13 @@ def get_direcao(coord_atual, prox_coord):
     x_prox, y_prox = prox_coord
     
     if x_prox < x_atual:
-        return "U"
-    elif x_prox > x_atual:
-        return "D"
-    elif y_prox < y_atual:
         return "L"
-    elif y_prox > y_atual:
+    elif x_prox > x_atual:
         return "R"
+    elif y_prox < y_atual:
+        return "U"
+    elif y_prox > y_atual:
+        return "D"
     else:
         return None  # se a próxima coordenada for a mesma que a atual, não há direção definida
 

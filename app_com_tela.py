@@ -79,13 +79,13 @@ def get_direcao(coord_atual, prox_coord):
     x_prox, y_prox = prox_coord
     
     if x_prox < x_atual:
-        return "U"
-    elif x_prox > x_atual:
-        return "D"
-    elif y_prox < y_atual:
         return "L"
-    elif y_prox > y_atual:
+    elif x_prox > x_atual:
         return "R"
+    elif y_prox < y_atual:
+        return "U"
+    elif y_prox > y_atual:
+        return "D"
     else:
         return None  # se a próxima coordenada for a mesma que a atual, não há direção definida
 
@@ -154,7 +154,7 @@ def draw_board(matrix, X,Y):
  
     
 #matriz com 65 linhas e 85 colunas preenchida com zeros e uns
-matrix_file = open("matrix.txt", "r")
+matrix_file = open("input1.txt", "r")
 matrix_list = matrix_file.readlines()
 matrix_file.close()
 matrix = []
@@ -175,7 +175,7 @@ for posicao, direcao in melhor_rota:
     d.append(direcao)
 
 print(d)  
-with open('historico.txt', 'a') as f:
+with open('output1.txt', 'a') as f:
     historico = ' '.join(d)
     f.write(str(historico))
 
